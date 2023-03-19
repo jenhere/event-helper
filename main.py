@@ -1,8 +1,7 @@
 import discord
 import asyncio
-import os
 from discord.ext import commands
-from datetime import datetime, timedelta
+from datetime import datetime
 from decouple import config
 EH_BOT_TOKEN = config('BOT_TOKEN')
 
@@ -14,12 +13,16 @@ async def on_ready():
   await client.tree.sync()
   print("Success! Bot is connected to Discord")
 
-@client.tree.command(name='watchattendee', description='Starts watching attendees on a specified voice channel')
-async def watch_attendee(interaction: discord.Interaction, vc: discord.VoiceChannel, minimum_minutes: int=3
-):
-    # Get the voice channel specified by vcid
-    # vc = discord.utils.get(interaction.guild.voice_channels, id=vcid)
+@client.tree.command(name='startwatching', description='Starts watching attendees on a specified voice channel')
+async def watch_attendee(interaction: discord.Interaction, vc: discord.VoiceChannel, minimum_minutes: int = 3):
+    # Describe the parameter
+    """my command description
+    Args:
+        minimum_minutes (int): Minimum minutes a member should spent on VC before get listed as attendee
+    """
+    pass
 
+    # Get the voice channel specified by vcid
     if vc is None:
         await interaction.response.send_message(f'Error: voice channel `{vc.id}` not found.')
         return
@@ -35,7 +38,7 @@ async def watch_attendee(interaction: discord.Interaction, vc: discord.VoiceChan
     attendee_list = '\n'.join([f'<@{m.id}> `{m.name}#{m.discriminator}`' for m in members])
     msg = await interaction.response.send_message(f'Attendees in voice channel <#{vc.id}> `{vc.id}`:\n{attendee_list}')
 
-    #list of unverified members with member id and time joining
+    # List of unverified members with member id and time joining
     unv_members_time = []
     unv_members = []
 
@@ -71,10 +74,9 @@ async def watch_attendee(interaction: discord.Interaction, vc: discord.VoiceChan
 
     client.loop.create_task(attendee_check(), name=str(vc.id))
 
-@client.tree.command(name='stopattendee', description='Stops watching attendees on a specified voice channel')
+@client.tree.command(name='stopwatching', description='Stops watching attendees on a specified voice channel')
 async def stop_attendee(interaction: discord.Interaction, vc:discord.VoiceChannel):
     # Stop any running tasks for the specified voice channel
-    # for task in asyncio.all_tasks():
     if vc is None:
         await interaction.response.send_message(f'Error: voice channel `{vc.id}` not found.')
         return
@@ -83,11 +85,12 @@ async def stop_attendee(interaction: discord.Interaction, vc:discord.VoiceChanne
         if task.get_name() == str(vc.id):
             task.cancel()
             await interaction.response.send_message(f"Stopped watching vc <#{vc.id}>")
+        else:
+            await interaction.response.send_message(f"There's no task watching <#{vc.id}>")
 
 @client.tree.command(name='ping', description='ping if the meeting helper bot is active')
 async def ping(interaction: discord.Interaction):
   #Send message to prove the bot is active
   await interaction.response.send_message('Hello, Im active.')
           
-# Replace YOUR_TOKEN_HERE with your bot token
 client.run(EH_BOT_TOKEN)
