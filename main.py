@@ -3,6 +3,8 @@ import asyncio
 import os
 from discord.ext import commands
 from datetime import datetime, timedelta
+from decouple import config
+EH_BOT_TOKEN = config('BOT_TOKEN')
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='eh!', intents=intents)
@@ -88,4 +90,4 @@ async def ping(interaction: discord.Interaction):
   await interaction.response.send_message('Hello, Im active.')
           
 # Replace YOUR_TOKEN_HERE with your bot token
-client.run("MTA1MjU3MDIzOTcxNzYyMTgzMA.G8f7d0.v6sr11YuY5LK2QnDlcB7zY_HWjeiiPfJ6dHjwg")
+client.run(EH_BOT_TOKEN)
