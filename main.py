@@ -1,9 +1,12 @@
 import discord
 import asyncio
+import os
 from discord.ext import commands
 from datetime import datetime
 from decouple import config
-EH_BOT_TOKEN = config('BOT_TOKEN')
+
+# EH_BOT_TOKEN = config('BOT_TOKEN')
+EH_BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='eh!', intents=intents)

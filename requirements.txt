@@ -2,3 +2,4 @@ dicord.py
 asyncio
 commands
 datetime
+python-decouple
